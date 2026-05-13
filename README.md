@@ -1,166 +1,163 @@
-# Welcome to your Lovable project
+# chah-stock
 
-## Project info
+chah-stock is a Supabase-backed inventory and client management app tailored for Algerian currency (DZD). It provides product tracking, client follow-ups, supplier and brand catalogs, custom fields, and export tools for operational reporting.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Stock management with quantities, reserved/remaining counts, and price tracking.
+- Rich product metadata: brands, origins, categories, suppliers, notes, and images.
+- Sub-products for bundles or split stock items.
+- Clients and payment tracking with status (pending/partial/completed).
+- Custom fields per product to capture extra business attributes.
+- Site settings for branding, company details, and thresholds.
+- Export tools: Excel (basic and detailed with images), PDF catalog, and DOCX product sheets.
+- Admin-only access with Supabase auth and allowlist enforcement.
 
-**Use Lovable**
+## Tech stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- Vite + React + TypeScript
+- Tailwind CSS + shadcn/ui (Radix UI)
+- Supabase (auth + Postgres + storage)
+- TanStack Query, React Router, Vitest
 
-Changes made via Lovable will be committed automatically to this repo.
+## Architecture overview
 
-**Use your preferred IDE**
+- UI entry: `src/main.tsx` bootstraps the app.
+- Routing and auth gate: `src/App.tsx` enforces admin access using Supabase session + allowlist.
+- Main dashboard: `src/pages/Index.tsx` aggregates tabs and management panels.
+- Data layer: `src/hooks/useStock.ts` handles CRUD, filtering, stats, and Supabase integration.
+- Settings + branding: `src/hooks/useSiteSettings.ts` and `src/hooks/useDynamicBranding.ts`.
+- Export services: `src/lib/exports.ts` provides Excel, PDF, and DOCX exports.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Data model (Supabase)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Core tables used by the frontend:
 
-Follow these steps:
+- `stock_items`
+- `custom_fields`
+- `custom_field_values`
+- `product_images`
+- `product_sub_products`
+- `clients`
+- `brands`
+- `origins`
+- `fournisseurs`
+- `categories`
+- `payment_tracking`
+- `site_settings`
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Migrations are stored in `supabase/migrations` and should be applied to keep schema aligned.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Getting started
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Prerequisites
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+- Node.js (18+ recommended)
+
+### Install
+
+```bash
+npm install
+```
+
+### Environment variables
+
+Create a `.env` file:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+VITE_ADMIN_EMAILS=admin@example.com,owner@example.com
+VITE_REQUIRE_ADMIN_ALLOWLIST=true
+```
+
+Notes:
+
+- `VITE_ADMIN_EMAILS` is required for admin access when strict mode is enabled.
+- `VITE_REQUIRE_ADMIN_ALLOWLIST` defaults to `true` in production and `false` in development.
+
+### Run locally
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Build and preview
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+npm run build
+npm run preview
+```
 
-**Use GitHub Codespaces**
+### Tests
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+npm test
+```
 
-## What technologies are used for this project?
+## Supabase setup notes
 
-This project is built with:
+- Configure auth providers and RLS policies in your Supabase project.
+- Product and brand images are stored as URLs; use Supabase Storage or a CDN.
+- Apply migrations in `supabase/migrations` to match the expected schema.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Exports
 
-## How can I deploy this project?
+The app can generate:
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+- Excel (basic) for inventory summaries.
+- Excel (detailed) with images and custom fields.
+- PDF catalog for clients.
+- DOCX product sheets for documentation.
 
-## Can I connect a custom domain to my Lovable project?
+## Weekly Supabase backup (Automated)
 
-Yes, you can!
+This repository includes an automated weekly backup workflow:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
-
-## Weekly Supabase Backup (Automated)
-
-This repository now includes an automated weekly backup workflow:
-
-- Workflow file: [.github/workflows/weekly-supabase-backup.yml](.github/workflows/weekly-supabase-backup.yml)
+- Workflow file: `.github/workflows/weekly-supabase-backup.yml`
 - Schedule: every Sunday at 02:00 UTC
 - Trigger: scheduled + manual run from GitHub Actions
 - Output:
-	- Full database dump in PostgreSQL custom format (`.dump`)
-	- Schema-only SQL dump (`.sql.gz`)
-	- SHA256 checksums (`SHA256SUMS.txt`)
+  - Full database dump in PostgreSQL custom format (`.dump`)
+  - Schema-only SQL dump (`.sql.gz`)
+  - SHA256 checksums (`SHA256SUMS.txt`)
 
-### 1. Configure GitHub Secrets
-
-Go to GitHub repository settings:
-
-- Settings -> Secrets and variables -> Actions -> New repository secret
+### Configure GitHub Secrets
 
 Required secret:
 
-- `SUPABASE_DB_URL`
-	- Use your Supabase Postgres connection string (transaction/session mode) with password.
+- `SUPABASE_DB_URL` (transaction/session mode connection string)
 
-Optional secrets for off-GitHub storage (recommended):
+Optional secrets for S3 uploads:
 
 - `BACKUP_AWS_ACCESS_KEY_ID`
 - `BACKUP_AWS_SECRET_ACCESS_KEY`
 - `BACKUP_AWS_REGION`
 - `BACKUP_S3_BUCKET`
 
-If optional S3 secrets are provided, each weekly backup is also uploaded to your bucket.
-
-### 2. Run backup manually (any time)
-
-1. Open GitHub -> Actions
-2. Select "Weekly Supabase Backup"
-3. Click "Run workflow"
-
-### 3. Restore from a backup
-
-Restore into a safe target database first (recommended test project):
+### Restore from a backup
 
 ```bash
 pg_restore \
-	--clean \
-	--if-exists \
-	--no-owner \
-	--no-privileges \
-	--dbname="<TARGET_DATABASE_URL>" \
-	supabase-weekly-<id>.dump
+  --clean \
+  --if-exists \
+  --no-owner \
+  --no-privileges \
+  --dbname="<TARGET_DATABASE_URL>" \
+  supabase-weekly-<id>.dump
 ```
 
-Verify data after restore:
+Database backups do not include Supabase Storage objects. Back up buckets separately if needed.
 
-- Stock tables
-- Clients
-- Payment tracking
-- Storage object links
+## Security hardening
 
-### 4. Storage files note
+### Admin access (fail-closed)
 
-Database backups do not include binary files in Supabase Storage buckets (images/documents).
-For full disaster recovery, also back up Supabase Storage objects on a schedule.
+Admin UI access requires `VITE_ADMIN_EMAILS` to be configured. If it is missing and strict mode is enabled, all users are blocked from admin access by default.
 
-## Security Hardening
+### Password policy
 
-This project now includes baseline hardening for authentication, secrets, and CI checks.
-
-### 1. Admin access is fail-closed
-
-Admin UI access now requires `VITE_ADMIN_EMAILS` to be configured.
-If it is missing, all users are blocked from admin access by default.
-
-Example:
-
-```env
-VITE_ADMIN_EMAILS="admin@example.com,owner@example.com"
-```
-
-Optional control flag:
-
-```env
-VITE_REQUIRE_ADMIN_ALLOWLIST="true"
-```
-
-- `true`: strict mode (recommended for production)
-- `false`: if no allowlist is defined, authenticated users can access admin (useful for local development)
-
-### 2. Strong password policy for admin account updates
-
-Admin password updates now require:
+Admin password updates require:
 
 - At least 12 characters
 - One uppercase letter
@@ -168,24 +165,15 @@ Admin password updates now require:
 - One number
 - One symbol
 
-### 3. Environment files and secrets hygiene
+### Secrets hygiene
 
 - `.env` and `.env.*` are ignored by git
-- Use `.env.example` as template
+- Use `.env.example` as a template
 - Never commit service role keys or raw database credentials
 
-### 4. Automated security checks in GitHub Actions
+### Automated security checks
 
-Workflow file: [.github/workflows/security-checks.yml](.github/workflows/security-checks.yml)
-
-It runs:
+Workflow file: `.github/workflows/security-checks.yml`
 
 - Dependency audit (`npm audit --audit-level=high`)
 - Secret scan (gitleaks)
-
-Triggers:
-
-- Push to `main`/`master`
-- Pull requests
-- Weekly schedule
-- Manual run
