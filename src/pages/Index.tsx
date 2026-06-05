@@ -17,6 +17,7 @@ import { PaymentTrackingManager } from "@/components/PaymentTrackingManager";
 import { FournisseurSection } from "@/components/FournisseurSection";
 import { SubproductManager } from "@/components/SubproductManager";
 import { AdminAccountPanel } from "@/components/AdminAccountPanel";
+import { ShopInquiryPanel } from "@/components/ShopInquiryPanel";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -55,6 +56,7 @@ import {
   FileJson2,
   BookOpen,
   CreditCard,
+  MessageSquare,
   Trash2,
   ArrowLeft,
   LogOut,
@@ -430,6 +432,7 @@ const Index = ({ adminEmail = "admin", onSignOut }: IndexProps) => {
                   {activeTab === "statistics" && "Statistiques"}
                   {activeTab === "clients" && "Clients"}
                   {activeTab === "payment-tracking" && "Suivi Paiement"}
+                  {activeTab === "shop-inquiries" && "Demandes Shop"}
                   {activeTab === "fournisseurs" && "Fournisseurs"}
                   {activeTab === "settings" && "Paramètres"}
                   {activeTab === "sub-products" && "Sous-produits"}
@@ -453,6 +456,15 @@ const Index = ({ adminEmail = "admin", onSignOut }: IndexProps) => {
                 >
                   <Sparkles className="h-3.5 w-3.5 mr-1.5" />
                   Sous-produits
+                </Button>
+                <Button
+                  variant={activeTab === "shop-inquiries" ? "default" : "outline"}
+                  size="sm"
+                  className="h-9 rounded-xl text-xs shrink-0"
+                  onClick={() => setActiveTab("shop-inquiries")}
+                >
+                  <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
+                  Demandes
                 </Button>
                 <Button
                   variant="outline"
@@ -488,6 +500,10 @@ const Index = ({ adminEmail = "admin", onSignOut }: IndexProps) => {
               <TabsTrigger value="payment-tracking" className="gap-2 rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border/70 px-3 sm:px-4 text-xs sm:text-sm transition-all">
                 <CreditCard className="h-4 w-4" />
                 <span>{isMobile ? "Suivi" : "Suivi Paiement"}</span>
+              </TabsTrigger>
+              <TabsTrigger value="shop-inquiries" className="gap-2 rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border/70 px-3 sm:px-4 text-xs sm:text-sm transition-all">
+                <MessageSquare className="h-4 w-4" />
+                <span>{isMobile ? "Demandes" : "Demandes Shop"}</span>
               </TabsTrigger>
               <TabsTrigger value="fournisseurs" className="gap-2 rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border/70 px-3 sm:px-4 text-xs sm:text-sm transition-all">
                 <Truck className="h-4 w-4" />
@@ -627,6 +643,10 @@ const Index = ({ adminEmail = "admin", onSignOut }: IndexProps) => {
               onUpdatePayment={updatePaymentTracking}
               onDeletePayment={deletePaymentTracking}
             />
+          </TabsContent>
+
+          <TabsContent value="shop-inquiries" className="space-y-6 animate-in">
+            <ShopInquiryPanel />
           </TabsContent>
 
           <TabsContent value="fournisseurs" className="space-y-6 animate-in">

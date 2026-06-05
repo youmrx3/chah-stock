@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_allowlist: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
       brands: {
         Row: {
           created_at: string
@@ -213,6 +231,137 @@ export type Database = {
           value?: string | null
         }
         Relationships: []
+      }
+      shop_customers: {
+        Row: {
+          address: string | null
+          company_name: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          company_name?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          company_name?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      shop_favorites: {
+        Row: {
+          created_at: string
+          id: string
+          stock_item_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          stock_item_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          stock_item_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_favorites_stock_item_id_fkey"
+            columns: ["stock_item_id"]
+            isOneToOne: false
+            referencedRelation: "stock_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shop_inquiries: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      shop_inquiry_items: {
+        Row: {
+          created_at: string
+          id: string
+          inquiry_id: string
+          note: string | null
+          quantity: number
+          stock_item_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          inquiry_id: string
+          note?: string | null
+          quantity?: number
+          stock_item_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          inquiry_id?: string
+          note?: string | null
+          quantity?: number
+          stock_item_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_inquiry_items_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "shop_inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shop_inquiry_items_stock_item_id_fkey"
+            columns: ["stock_item_id"]
+            isOneToOne: false
+            referencedRelation: "stock_items"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       stock_items: {
         Row: {

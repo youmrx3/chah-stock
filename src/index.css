@@ -6,33 +6,33 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 222 47% 11%;
+    --background: 32 33% 96%;
+    --foreground: 210 24% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 210 24% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 210 24% 15%;
 
-    --primary: 221 83% 53%;
+    --primary: 187 73% 34%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 220 9% 46%;
+    --secondary: 30 20% 94%;
+    --secondary-foreground: 210 12% 38%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 30 20% 94%;
+    --muted-foreground: 210 12% 38%;
 
-    --accent: 262 83% 58%;
+    --accent: 26 94% 56%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 52%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 221 83% 53%;
+    --border: 30 18% 88%;
+    --input: 30 18% 88%;
+    --ring: 187 73% 34%;
 
     --radius: 0.75rem;
 
@@ -108,9 +108,9 @@
     font-feature-settings: "rlig" 1, "calt" 1;
     font-family: "Manrope", "Segoe UI", "Helvetica Neue", sans-serif;
     background-image:
-      radial-gradient(circle at 8% 0%, hsl(210 92% 86% / 0.35) 0%, transparent 42%),
-      radial-gradient(circle at 92% 0%, hsl(165 80% 84% / 0.35) 0%, transparent 45%),
-      linear-gradient(180deg, hsl(var(--background)) 0%, hsl(220 20% 98%) 100%);
+      radial-gradient(circle at 8% 0%, hsl(32 80% 90% / 0.5) 0%, transparent 42%),
+      radial-gradient(circle at 92% 0%, hsl(187 70% 85% / 0.35) 0%, transparent 45%),
+      linear-gradient(180deg, hsl(var(--background)) 0%, hsl(30 36% 98%) 100%);
     background-attachment: fixed;
   }
 
@@ -141,7 +141,7 @@
   }
 
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(217 86% 53%), hsl(197 86% 47%));
+    background: linear-gradient(135deg, hsl(187 73% 34%), hsl(200 78% 38%));
   }
 
   .gradient-success {
@@ -149,7 +149,13 @@
   }
 
   .gradient-warning {
-    background: linear-gradient(135deg, hsl(38 92% 50%), hsl(25 95% 53%));
+    background: linear-gradient(135deg, hsl(30 94% 55%), hsl(18 90% 56%));
+  }
+
+  .section-divider {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, hsl(var(--border)), transparent);
   }
 
   .gradient-danger {
@@ -159,6 +165,21 @@
   .animate-in {
     animation: fadeSlideIn 0.42s cubic-bezier(0.2, 0.65, 0.2, 1);
   }
+
+  .stagger-children > * {
+    animation: fadeSlideIn 0.42s cubic-bezier(0.2, 0.65, 0.2, 1);
+    animation-fill-mode: both;
+    opacity: 0;
+  }
+
+  .stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+  .stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+  .stagger-children > *:nth-child(9) { animation-delay: 480ms; }
 
   @keyframes fadeSlideIn {
     from {

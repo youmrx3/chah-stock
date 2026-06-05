@@ -12,6 +12,8 @@ chah-stock is a Supabase-backed inventory and client management app tailored for
 - Site settings for branding, company details, and thresholds.
 - Export tools: Excel (basic and detailed with images), PDF catalog, and DOCX product sheets.
 - Admin-only access with Supabase auth and allowlist enforcement.
+- Client-facing storefront with catalog browsing, filters, inquiry basket, and quote requests.
+- Inquiry tracking for clients and admin review workflow.
 
 ## Tech stack
 
@@ -45,6 +47,11 @@ Core tables used by the frontend:
 - `categories`
 - `payment_tracking`
 - `site_settings`
+- `shop_customers`
+- `shop_inquiries`
+- `shop_inquiry_items`
+- `shop_favorites`
+- `admin_allowlist`
 
 Migrations are stored in `supabase/migrations` and should be applied to keep schema aligned.
 
@@ -100,6 +107,33 @@ npm test
 - Configure auth providers and RLS policies in your Supabase project.
 - Product and brand images are stored as URLs; use Supabase Storage or a CDN.
 - Apply migrations in `supabase/migrations` to match the expected schema.
+
+## Client storefront
+
+Routes:
+
+- `/shop` landing page
+- `/shop/catalog` product catalog with search + filters
+- `/shop/product/:id` product detail page
+- `/shop/cart` inquiry basket
+- `/shop/account` client account + inquiry tracking
+
+Inquiry flow:
+
+1. Client selects products.
+2. Client sends a request.
+3. Admin reviews and confirms pricing.
+
+### Admin review access
+
+Add admin emails to `admin_allowlist` in Supabase:
+
+```sql
+insert into public.admin_allowlist (email)
+values ('admin@example.com');
+```
+
+This unlocks inquiry review in the admin panel.
 
 ## Exports
 
