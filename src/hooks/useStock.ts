@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { StockItem, CustomField, StockStats, Client, Brand, Origin, Fournisseur, Category, PaymentTracking } from "@/types/stock";
+import { StockItem, CustomField, CustomFieldValue, ProductImage, SubProduct, StockStats, Client, Brand, Origin, Fournisseur, Category, PaymentTracking } from "@/types/stock";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -74,9 +74,9 @@ export function useStock() {
       // Attach custom field values
       items = items.map(item => ({
         ...item,
-        custom_field_values: (cfvData || []).filter(cfv => cfv.stock_item_id === item.id) as any,
-        product_images: (imagesData || []).filter(img => img.stock_item_id === item.id) as any,
-        sub_products: (subProductsData || []).filter(sp => sp.parent_product_id === item.id) as any,
+        custom_field_values: (cfvData || []).filter(cfv => cfv.stock_item_id === item.id) as CustomFieldValue[],
+        product_images: (imagesData || []).filter(img => img.stock_item_id === item.id) as ProductImage[],
+        sub_products: (subProductsData || []).filter(sp => sp.parent_product_id === item.id) as SubProduct[],
       }));
 
       // Fetch relationships separately
@@ -88,7 +88,7 @@ export function useStock() {
       const categoryIds = [...new Set(items.map(i => asId(i.category_id)).filter(Boolean) as string[])];
 
       const fetchRelatedRows = async (table: "clients" | "brands" | "origins" | "fournisseurs" | "categories", ids: string[]) => {
-        if (ids.length === 0) return [] as any[];
+        if (ids.length === 0) return [];
 
         const byIds = await supabase.from(table).select("*").in("id", ids);
         if (!byIds.error) {
@@ -101,11 +101,11 @@ export function useStock() {
         const fallback = await supabase.from(table).select("*");
         if (fallback.error) {
           console.error(`Error fetching ${table} fallback:`, fallback.error);
-          return [] as any[];
+          return [];
         }
 
         const idSet = new Set(ids);
-        return (fallback.data || []).filter((row: any) => idSet.has(String(row.id)));
+        return (fallback.data || []).filter((row: Record<string, unknown>) => idSet.has(String(row.id)));
       };
 
       const [clients, brands, origins, fournisseurs, categories] = await Promise.all([
@@ -120,7 +120,7 @@ export function useStock() {
       items = items.map(item => ({
         ...item,
         paid_amount: item.paid_amount || 0,
-        price_currency: item.price_currency || "DZD",
+        price_currency: item.price_currency || "CAD",
         image_url: item.product_images?.[0]?.image_url || item.image_url || null,
         client: clients.find(c => String(c.id) === String(item.client_id || "")) || null,
         brand: brands.find(b => String(b.id) === String(item.brand_id || "")) || null,
@@ -331,7 +331,7 @@ export function useStock() {
         quantity: item.quantity,
         reference: item.reference || "",
         price_ht: item.price_ht,
-        price_currency: item.price_currency || "DZD",
+        price_currency: item.price_currency || "CAD",
         paid_amount: item.paid_amount || 0,
         client_id: item.client_id || null,
         brand_id: item.brand_id || null,
@@ -354,7 +354,7 @@ export function useStock() {
 
       if (error) {
         let retryError: unknown = error;
-        let retryPayload: Record<string, unknown> = { ...insertPayload };
+        const retryPayload: Record<string, unknown> = { ...insertPayload };
 
         // Retry by removing only the specific missing columns instead of dropping all relation fields.
         for (let attempt = 0; attempt < 8 && retryError; attempt++) {
@@ -399,7 +399,7 @@ export function useStock() {
         quantity: updates.quantity,
         reference: updates.reference,
         price_ht: updates.price_ht,
-        price_currency: updates.price_currency || "DZD",
+        price_currency: updates.price_currency || "CAD",
         paid_amount: updates.paid_amount,
         client_id: updates.client_id,
         brand_id: updates.brand_id,
@@ -419,7 +419,7 @@ export function useStock() {
 
       if (error) {
         let retryError: unknown = error;
-        let retryPayload: Record<string, unknown> = { ...payload };
+        const retryPayload: Record<string, unknown> = { ...payload };
 
         // Retry by removing only missing columns; keep relation fields whenever schema supports them.
         for (let attempt = 0; attempt < 8 && retryError; attempt++) {
@@ -1146,7 +1146,7 @@ export function useStock() {
 
       if (existingError) throw existingError;
 
-      let updateData: any = { ...updates };
+      const updateData: Record<string, unknown> = { ...updates };
 
       // Auto-calculate status based on amounts
       if (updates.amount_paid !== undefined || updates.amount_willing_to_pay !== undefined) {

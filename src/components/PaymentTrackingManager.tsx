@@ -452,7 +452,7 @@ export function PaymentTrackingManager({
                       name="status"
                       value="pending"
                       checked={paymentStatus === "pending"}
-                      onChange={(e) => setPaymentStatus(e.target.value as any)}
+                      onChange={(e) => setPaymentStatus(e.target.value as "pending" | "partial" | "completed")}
                       disabled={amountPaidNum > 0}
                     />
                     <div>
@@ -467,7 +467,7 @@ export function PaymentTrackingManager({
                       name="status"
                       value="partial"
                       checked={paymentStatus === "partial"}
-                      onChange={(e) => setPaymentStatus(e.target.value as any)}
+                      onChange={(e) => setPaymentStatus(e.target.value as "pending" | "partial" | "completed")}
                       disabled={amountPaidNum === 0 || amountPaidNum >= itemTotal}
                     />
                     <div>
@@ -482,7 +482,7 @@ export function PaymentTrackingManager({
                       name="status"
                       value="completed"
                       checked={paymentStatus === "completed"}
-                      onChange={(e) => setPaymentStatus(e.target.value as any)}
+                      onChange={(e) => setPaymentStatus(e.target.value as "pending" | "partial" | "completed")}
                       disabled={amountPaidNum < itemTotal}
                     />
                     <div>

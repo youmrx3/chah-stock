@@ -1,6 +1,6 @@
 # chah-stock
 
-chah-stock is a Supabase-backed inventory and client management app tailored for Algerian currency (DZD). It provides product tracking, client follow-ups, supplier and brand catalogs, custom fields, and export tools for operational reporting.
+chah-stock is a Supabase-backed inventory and client management app tailored for Canadian currency (CAD). It provides product tracking, client follow-ups, supplier and brand catalogs, custom fields, and export tools for operational reporting.
 
 ## Features
 
@@ -13,7 +13,7 @@ chah-stock is a Supabase-backed inventory and client management app tailored for
 - Export tools: Excel (basic and detailed with images), PDF catalog, and DOCX product sheets.
 - Admin-only access with Supabase auth and allowlist enforcement.
 - Client-facing storefront with catalog browsing, filters, inquiry basket, and quote requests.
-- Inquiry tracking for clients and admin review workflow.
+- Inquiry tracking with full admin workflow: client linking, payment conversion, stock deduction, and status management.
 
 ## Tech stack
 
@@ -118,11 +118,22 @@ Routes:
 - `/shop/cart` inquiry basket
 - `/shop/account` client account + inquiry tracking
 
-Inquiry flow:
+Inquiry flow (customer side):
 
-1. Client selects products.
-2. Client sends a request.
-3. Admin reviews and confirms pricing.
+1. Customer browses the catalog and adds products to their inquiry basket.
+2. Customer submits the inquiry with an optional message.
+3. Customer can track their inquiry status from their account page.
+
+Admin workflow (Demandes Shop tab):
+
+1. Admin reviews incoming inquiries with product details, quantities, and calculated totals.
+2. Admin links the inquiry to an existing client record via dropdown (required for payment integration).
+3. Admin takes one of the following actions:
+   - **Convertir en suivi** — Creates a `payment_tracking` record for each product (pending status). The payment appears in the Suivi Paiement tab and counts toward client/statistics metrics.
+   - **Marquer payé** — Same as above but marks as paid immediately: stock is deducted, payment status is set to completed.
+   - **Annuler** — Cancels the inquiry without affecting stock or payments.
+   - **Supprimer** — Permanently deletes the inquiry.
+4. Admin can also freely update the status (Soumise → En cours → Devisé → Payée / Annulée / Clôturée) at any time.
 
 ### Admin review access
 

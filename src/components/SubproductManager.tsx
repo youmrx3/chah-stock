@@ -19,7 +19,7 @@ interface SubproductManagerProps {
 
 export function SubproductManager({
   subproducts,
-  currency = "DZD",
+  currency = "CAD",
   onAdd,
   onUpdate,
   onDelete,

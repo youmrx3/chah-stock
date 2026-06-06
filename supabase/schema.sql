@@ -134,7 +134,7 @@ INSERT INTO public.site_settings (key, value) VALUES
   ('company_subtitle', 'Equipement medical'),
   ('logo_url', NULL),
   ('low_stock_threshold', '5'),
-  ('currency', 'DZD');
+  ('currency', 'CAD');
 
 CREATE TRIGGER update_site_settings_updated_at
   BEFORE UPDATE ON public.site_settings
@@ -459,7 +459,7 @@ WHERE price IS NULL;
 
 -- 20260412093000_add_price_currency_to_stock_items.sql
 alter table public.stock_items
-add column if not exists price_currency text not null default 'DZD';
+add column if not exists price_currency text not null default 'CAD';
 
 do $$
 begin
@@ -470,30 +470,30 @@ begin
   ) then
     alter table public.stock_items
     add constraint stock_items_price_currency_check
-    check (price_currency = 'DZD');
+    check (price_currency = 'CAD');
   end if;
 end $$;
 
 update public.stock_items
-set price_currency = 'DZD'
+set price_currency = 'CAD'
 where price_currency is null or price_currency = '';
 
 
 -- 20260423120000_force_dzd_only_currency.sql
--- Force the application and database to use Algerian Dinar (DZD) only.
+-- Force the application and database to use Canadian Dollar (CAD) only.
 
 alter table if exists public.stock_items
   add column if not exists price_currency text;
 
 update public.stock_items
-set price_currency = 'DZD'
-where price_currency is distinct from 'DZD';
+set price_currency = 'CAD'
+where price_currency is distinct from 'CAD';
 
 do $$
 begin
   if to_regclass('public.site_settings') is not null then
     update public.site_settings
-    set value = 'DZD'
+    set value = 'CAD'
     where key = 'currency';
   end if;
 end $$;
@@ -503,11 +503,11 @@ alter table if exists public.stock_items
 
 alter table if exists public.stock_items
   add constraint stock_items_price_currency_check
-  check (price_currency = 'DZD');
+  check (price_currency = 'CAD');
 
 alter table if exists public.stock_items
   alter column price_currency set not null,
-  alter column price_currency set default 'DZD';
+  alter column price_currency set default 'CAD';
 
 -- 20260514090000_add_shop_inquiries.sql
 -- Shop/customer inquiry tables for client-facing storefront
@@ -556,6 +556,7 @@ CREATE TABLE IF NOT EXISTS public.shop_customers (
 CREATE TABLE IF NOT EXISTS public.shop_inquiries (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  client_id uuid REFERENCES public.clients(id) ON DELETE SET NULL,
   status text NOT NULL DEFAULT 'submitted',
   message text DEFAULT '',
   created_at timestamp with time zone NOT NULL DEFAULT now(),
@@ -609,6 +610,9 @@ FOR UPDATE USING (
 WITH CHECK (
   public.is_admin_user() OR (user_id = auth.uid() AND status = 'submitted')
 );
+
+CREATE POLICY "Admin can delete inquiries" ON public.shop_inquiries
+FOR DELETE USING (public.is_admin_user());
 
 -- Inquiry items policies
 CREATE POLICY "Customers can view inquiry items" ON public.shop_inquiry_items

@@ -21,10 +21,10 @@ const defaults: SiteSettings = {
   company_email: "",
   company_phone: "",
   low_stock_threshold: "5",
-  currency: "DZD",
+  currency: "CAD",
 };
 
-const APP_CURRENCY = "DZD";
+const APP_CURRENCY = "CAD";
 
 export function useSiteSettings() {
   const [settings, setSettings] = useState<SiteSettings>(defaults);

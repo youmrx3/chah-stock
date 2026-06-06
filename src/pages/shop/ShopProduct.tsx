@@ -37,7 +37,7 @@ export default function ShopProduct() {
   const images = item.product_images?.length ? item.product_images.map((img) => img.image_url) : item.image_url ? [item.image_url] : [];
   const displayImage = images[0];
   const priceLabel = item.price_ht !== null
-    ? new Intl.NumberFormat("fr-DZ", { style: "currency", currency: settings.currency, minimumFractionDigits: 0 }).format(item.price_ht)
+    ? new Intl.NumberFormat("en-CA", { style: "currency", currency: settings.currency, minimumFractionDigits: 0 }).format(item.price_ht)
     : "Prix sur demande";
 
   return (

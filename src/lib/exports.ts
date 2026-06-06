@@ -456,9 +456,9 @@ export async function exportProductToPdfEnhanced(
     doc.text("Images du Produit", 14, cursorY);
     cursorY += 8;
 
-    let imagesPerRow = 2;
-    let imageWidth = (pageWidth - 28) / imagesPerRow;
-    let imageHeight = 40;
+    const imagesPerRow = 2;
+    const imageWidth = (pageWidth - 28) / imagesPerRow;
+    const imageHeight = 40;
     let currentXPos = 14;
     let currentRow = 0;
 
@@ -670,7 +670,7 @@ export async function exportCatalogPdf(
     }
 
     // Product info on the right side
-    let rightColX = 100;
+    const rightColX = 100;
     let rightColY = cursorY;
 
     doc.setFontSize(11);

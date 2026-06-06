@@ -9,13 +9,14 @@ export interface ShopCustomer {
   updated_at?: string;
 }
 
-export type InquiryStatus = "submitted" | "reviewing" | "quoted" | "closed";
+export type InquiryStatus = "submitted" | "reviewing" | "quoted" | "paid" | "canceled" | "closed";
 
 export interface ShopInquiry {
   id: string;
   user_id: string;
   status: InquiryStatus;
   message: string | null;
+  client_id: string | null;
   created_at?: string;
   updated_at?: string;
 }

@@ -79,7 +79,7 @@ interface IndexProps {
   onSignOut?: () => Promise<void>;
 }
 
-const APP_CURRENCY = "DZD";
+const APP_CURRENCY = "CAD";
 
 const Index = ({ adminEmail = "admin", onSignOut }: IndexProps) => {
   const isMobile = useIsMobile();
@@ -646,7 +646,12 @@ const Index = ({ adminEmail = "admin", onSignOut }: IndexProps) => {
           </TabsContent>
 
           <TabsContent value="shop-inquiries" className="space-y-6 animate-in">
-            <ShopInquiryPanel />
+            <ShopInquiryPanel
+              clients={clients}
+              stockItems={allItems}
+              currency={APP_CURRENCY}
+              onCreatePayment={addPaymentTracking}
+            />
           </TabsContent>
 
           <TabsContent value="fournisseurs" className="space-y-6 animate-in">

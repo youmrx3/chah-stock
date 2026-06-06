@@ -15,7 +15,7 @@ interface ProductCardProps {
 export function ProductCard({ item, currency, onAddToInquiry, onToggleFavorite, isFavorite }: ProductCardProps) {
   const imageUrl = item.product_images?.[0]?.image_url || item.image_url || "";
   const priceLabel = item.price_ht !== null
-    ? new Intl.NumberFormat("fr-DZ", { style: "currency", currency, minimumFractionDigits: 0 }).format(item.price_ht)
+    ? new Intl.NumberFormat("en-CA", { style: "currency", currency, minimumFractionDigits: 0 }).format(item.price_ht)
     : "Prix sur demande";
 
   return (

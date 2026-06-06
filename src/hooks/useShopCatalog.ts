@@ -37,7 +37,7 @@ export function useShopCatalog() {
 
       if (itemsError) throw itemsError;
 
-      const typedItems = (items || []).map((item: any) => ({
+      const typedItems = (items || []).map((item: Record<string, unknown>) => ({
         ...item,
         brand: item.brands || null,
         origin: item.origins || null,

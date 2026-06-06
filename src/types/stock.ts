@@ -5,7 +5,7 @@ export interface StockItem {
   quantity: number;
   reference: string | null;
   price_ht: number | null;
-  price_currency?: "DZD" | null;
+  price_currency?: "CAD" | null;
   reserved: number;
   remaining: number;
   paid_amount: number;

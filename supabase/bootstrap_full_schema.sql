@@ -129,7 +129,7 @@ INSERT INTO public.site_settings (key, value) VALUES
   ('company_subtitle', 'Équipement médical'),
   ('logo_url', NULL),
   ('low_stock_threshold', '5'),
-  ('currency', 'DZD');
+  ('currency', 'CAD');
 
 CREATE TRIGGER update_site_settings_updated_at
   BEFORE UPDATE ON public.site_settings
