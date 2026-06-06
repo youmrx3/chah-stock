@@ -30,27 +30,36 @@ const App = () => {
     let mounted = true;
 
     const init = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!mounted) return;
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
-      setLoadingAuth(false);
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (!mounted) return;
+        setSession(data.session);
+        setUser(data.session?.user ?? null);
+      } catch (err) {
+        console.error("Auth init error:", err);
+      }
+      if (mounted) setLoadingAuth(false);
     };
 
     init();
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setUser(nextSession?.user ?? null);
-      setLoadingAuth(false);
-    });
+    try {
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+        setSession(nextSession);
+        setUser(nextSession?.user ?? null);
+        setLoadingAuth(false);
+      });
 
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
+      return () => {
+        mounted = false;
+        subscription.unsubscribe();
+      };
+    } catch (err) {
+      console.error("Auth subscription error:", err);
+      if (mounted) setLoadingAuth(false);
+    }
   }, []);
 
   const adminAllowList = useMemo(() => {
