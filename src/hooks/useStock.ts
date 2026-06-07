@@ -51,6 +51,11 @@ export function useStock() {
 
       if (error) {
         console.error("Error fetching stock items:", error);
+        if (error && typeof error === "object") {
+          console.error("Fetch error details:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
+          console.error("Fetch error message:", (error as { message?: string }).message);
+          console.error("Fetch error code:", (error as { code?: string }).code);
+        }
         throw error;
       }
 
@@ -386,6 +391,11 @@ export function useStock() {
       return inserted;
     } catch (error) {
       console.error("Error adding item:", error);
+      if (error && typeof error === "object") {
+        console.error("Error details:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
+        console.error("Error message:", (error as { message?: string }).message);
+        console.error("Error code:", (error as { code?: string }).code);
+      }
       toast.error("Erreur lors de l'ajout du produit");
       return null;
     }
